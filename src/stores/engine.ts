@@ -1,11 +1,9 @@
-import { faker } from "@faker-js/faker";
 import type { RefObject } from "react";
 import { create } from "zustand";
-import {
-  usePreferenceStore,
-  type Duration,
-  type GameType,
-} from "~/stores/preference";
+import type { Duration } from "~/common/durations";
+import type { GameType } from "~/common/game-types";
+import { usePreferenceStore } from "~/stores/preference";
+import { generateWords } from "~/utils/generate-words";
 import { useCountdownStore } from "./countdown";
 
 type State = "WAITING" | "TYPING" | "RESULT";
@@ -26,31 +24,7 @@ type EngineState = {
   };
 };
 
-const WORDS_COUNT = 500;
-
-const generateWords = (gameType?: GameType) => {
-  const generateRandomInRange = (min: number, max: number) => {
-    return Math.random() * (max - min) + min;
-  };
-
-  if (gameType === "normal") return faker.random.words(WORDS_COUNT).split(" ");
-  else if (gameType === "alphanumeric")
-    return Array(WORDS_COUNT)
-      .fill("")
-      .map(() => faker.random.alphaNumeric(generateRandomInRange(4, 12)));
-  else if (gameType === "alpha")
-    return Array(WORDS_COUNT)
-      .fill("")
-      .map(() => faker.random.alpha(generateRandomInRange(4, 12)));
-  else if (gameType === "numbers")
-    return Array(WORDS_COUNT)
-      .fill("")
-      .map(() => faker.random.numeric(generateRandomInRange(4, 12)));
-
-  return faker.random.words(WORDS_COUNT).toLowerCase().split(" ");
-};
-
-const words = generateWords();
+const words = generateWords(usePreferenceStore.getState().gameType);
 
 export const useEngineStore = create<EngineState>((set, get) => ({
   state: "WAITING",
@@ -65,6 +39,8 @@ export const useEngineStore = create<EngineState>((set, get) => ({
 
       const currentIndex = inputs.length - 1;
       const currentWordElement = currentWordRef?.current;
+
+      // If previous word
       if (!input && inputs[currentIndex] !== words[currentIndex]) {
         currentWordElement?.previousElementSibling?.classList.remove(
           "right",
@@ -77,6 +53,7 @@ export const useEngineStore = create<EngineState>((set, get) => ({
           inputs: state.inputs.slice(0, state.inputs.length - 1),
         }));
       } else {
+        // If current word
         return set((state) => ({
           input: state.input.slice(0, state.input.length - 1),
         }));
@@ -95,17 +72,18 @@ export const useEngineStore = create<EngineState>((set, get) => ({
 
       // Restart with Tab
       if (useCountdownStore.getState().ref === null && key === "Tab") {
+        // We remove all colors classes
         document
           .querySelectorAll(".wrong, .right")
           .forEach((el) => el.classList.remove("wrong", "right"));
-        if (useCountdownStore.getState().ref) {
-          clearInterval(useCountdownStore.getState().ref ?? undefined);
-          useCountdownStore.getState().actions.updateTimerRef(null);
-        }
-        // generate words
+
+        // If countdown is running, we clear the interval
+        if (useCountdownStore.getState().ref)
+          useCountdownStore.getState().actions.clear();
         reset();
       }
 
+      // If countdown isn't running and a key is pressed, we begin
       if (useCountdownStore.getState().ref === null && key !== "Tab") {
         useCountdownStore.getState().actions.begin();
         set({ state: "TYPING" });
@@ -125,20 +103,21 @@ export const useEngineStore = create<EngineState>((set, get) => ({
               usePreferenceStore.getState().duration ||
             useCountdownStore.getState().ref !== null
           ) {
+            // We remove all colors classes
             document
               .querySelectorAll(".wrong, .right")
               .forEach((el) => el.classList.remove("wrong", "right"));
-            if (!!useCountdownStore.getState().ref) {
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              // clearInterval(useCountdownStore.getState().ref!);
+
+            // If countdown is running, we clear the interval
+            if (useCountdownStore.getState().ref)
               useCountdownStore.getState().actions.clear();
-            }
             reset();
             document.getElementsByClassName("word")[0]?.scrollIntoView();
           }
           break;
         case " ":
           if (input === " ") return;
+
           currentWordElement?.classList.add(
             input !== currentWord ? "wrong" : "right"
           );

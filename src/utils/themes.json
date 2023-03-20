@@ -1,0 +1,38 @@
+{
+  "default": {
+    "background": "#212737",
+    "primary": "#FF6B01",
+    "white": "#EAEDF3",
+    "text": "#64748b"
+  },
+  "mocha": {
+    "background": "#2D2424",
+    "primary": "#DC521C",
+    "white": "#E0C097",
+    "text": "#E0C097"
+  },
+  "forest": {
+    "background": "#334443",
+    "text": "#FFF8DF",
+    "white": "#FFF8DF",
+    "primary": "#C6FFC1"
+  },
+  "terminal": {
+    "background": "black",
+    "primary": "red",
+    "white": "#EAEDF3",
+    "text": "#64748b"
+  },
+  "mountain": {
+    "background": "#10271E",
+    "primary": "#A2D6F6",
+    "white": "#D1AC3F",
+    "text": "#D1AC3F"
+  },
+  "pink-sky": {
+    "background": "#23049D",
+    "white": "#FF79CD",
+    "primary": "#FFDF6B",
+    "text": "#FF79CD"
+  }
+}

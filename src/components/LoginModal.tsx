@@ -13,8 +13,6 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password cannot be empty"),
 });
 
-const resolver = zodResolver(loginSchema);
-
 type FormValues = z.infer<typeof loginSchema>;
 
 const LoginModal: React.FC = () => {
@@ -24,7 +22,7 @@ const LoginModal: React.FC = () => {
     reset,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver,
+    resolver: zodResolver(loginSchema),
   });
 
   const handleLogin: SubmitHandler<FormValues> = useCallback((values) => {

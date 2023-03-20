@@ -1,6 +1,8 @@
 import type { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import { z } from "zod";
+import { gameTypeSchema } from "~/common/game-types";
+import { timeFilterSchema } from "~/common/time-filters";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
@@ -10,43 +12,44 @@ const createTestSchema = z.object({
   amountOfIncorrectWords: z.number().min(0),
   amountOfCorrectCharacters: z.number().min(0),
   duration: z.number().min(0),
-  type: z.enum(["normal", "lowercase", "numbers", "alpha", "alphanumeric"]),
+  type: gameTypeSchema,
 });
 
 export const testRouter = createTRPCRouter({
   getAll: publicProcedure
     .input(
       z.object({
-        filter: z.enum(["ALL_TIME", "THIS_YEAR", "THIS_MONTH", "TODAY"]),
-        gameType: z
-          .enum(["normal", "lowercase", "numbers", "alpha", "alphanumeric"])
-          .optional(),
+        time: timeFilterSchema,
+        gameType: gameTypeSchema.optional(),
+        duration: z.number().optional(),
       })
     )
     .query(async ({ ctx: { prisma }, input }) => {
-      const { filter, gameType } = input;
+      const { time, gameType, duration } = input;
 
       const testWhereInput: Prisma.TestWhereInput = {};
 
-      if (filter === "THIS_YEAR")
+      if (time === "THIS_YEAR")
         testWhereInput.createdAt = {
           gte: dayjs().startOf("year").toDate(),
           lte: dayjs().endOf("year").toDate(),
         };
 
-      if (filter === "THIS_MONTH")
+      if (time === "THIS_MONTH")
         testWhereInput.createdAt = {
           gte: dayjs().startOf("month").toDate(),
           lte: dayjs().endOf("month").toDate(),
         };
 
-      if (filter === "TODAY")
+      if (time === "TODAY")
         testWhereInput.createdAt = {
           gte: dayjs().startOf("day").toDate(),
           lte: dayjs().endOf("day").toDate(),
         };
 
       if (!!gameType) testWhereInput.type = gameType;
+
+      if (!!duration) testWhereInput.duration = duration;
 
       return await prisma.test.findMany({
         orderBy: {
@@ -189,16 +192,6 @@ export const testRouter = createTRPCRouter({
   create: publicProcedure
     .input(createTestSchema)
     .mutation(async ({ ctx: { prisma, session }, input }) => {
-      await Promise.all(
-        new Array(50).fill("").map(() =>
-          prisma.test.create({
-            data: {
-              ...input,
-              userId: session?.user.id,
-            },
-          })
-        )
-      );
       return await prisma.test.create({
         data: {
           ...input,

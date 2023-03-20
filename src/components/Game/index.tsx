@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import Footer from "~/components/Footer";
 import Commands from "~/components/Game/Commands";
 import Countdown from "~/components/Game/Countdown";
@@ -8,18 +8,26 @@ import Header from "~/components/Header";
 import { useEngineStore } from "~/stores/engine";
 
 const Game: React.FC = () => {
+  // States
   const words = useEngineStore((state) => state.words);
   const currentWord = useEngineStore((state) => state.currentWord);
   const inputs = useEngineStore((state) => state.inputs);
   const input = useEngineStore((state) => state.input);
   const state = useEngineStore((state) => state.state);
-  // const currentWordRef = useEngineStore((state) => state.currentWordRef);
   const { pressKey, updateCurrentWordRef } = useEngineStore(
     (state) => state.actions
   );
-  const extraCharacters = input.slice(currentWord.length).split("");
+
+  // Refs
   const currentWordRef = useRef<HTMLDivElement>(null);
 
+  // Memoized values
+  const extraCharacters = useMemo(
+    () => input.slice(currentWord.length).split(""),
+    [currentWord.length, input]
+  );
+
+  // Handlers
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       // if a modal is open, then prevent pressing a key on the game
@@ -34,11 +42,14 @@ const Game: React.FC = () => {
     [pressKey]
   );
 
+  // Effects
   useEffect(() => {
+    // Set the word ref on initial load
     updateCurrentWordRef(currentWordRef);
   }, [updateCurrentWordRef]);
 
   useEffect(() => {
+    // Add the keydown event listener on initial load
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -47,6 +58,7 @@ const Game: React.FC = () => {
   }, [handleKeyDown]);
 
   useEffect(() => {
+    // When a key is pressed, toggles the "wrong" and "right" classes for current character of the current word
     const index = input.length - 1;
     const currentWordElement = currentWordRef?.current;
     currentWordElement?.children[index + 1]?.classList.add(
@@ -55,6 +67,7 @@ const Game: React.FC = () => {
   }, [currentWord, input, currentWordRef]);
 
   useEffect(() => {
+    // When a key is pressed, clear the next character (ensures backspace removes the classes)
     const index = input.length;
     const currentWordElement = currentWordRef?.current;
     if (index < currentWord.length)

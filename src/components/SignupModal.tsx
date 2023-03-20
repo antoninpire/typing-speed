@@ -3,26 +3,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useCallback } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
+import { signupSchema } from "~/common/signup-schema";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
 import Modal from "~/components/ui/Modal";
 import { api } from "~/utils/api";
 import { toast } from "~/utils/toast";
 
-const signupSchema = z
-  .object({
-    username: z
-      .string()
-      .min(3, "Username has to be at least 3 characters")
-      .max(75, "Username has to be at most 75 characters"),
-    password: z
-      .string()
-      .min(4, "Password has to be at least 4 characters")
-      .max(128, "Password has to be at most 128 characters"),
-    passwordConfirm: z.string(),
-  })
-  .superRefine(({ passwordConfirm, password }, ctx) => {
+const refinedSignupSchema = signupSchema.superRefine(
+  ({ passwordConfirm, password }, ctx) => {
     if (passwordConfirm !== password) {
       ctx.addIssue({
         code: "custom",
@@ -30,9 +20,10 @@ const signupSchema = z
         message: "The passwords don't match",
       });
     }
-  });
+  }
+);
 
-type FormValues = z.infer<typeof signupSchema>;
+type FormValues = z.infer<typeof refinedSignupSchema>;
 
 const SignupModal: React.FC = () => {
   const {
@@ -41,7 +32,7 @@ const SignupModal: React.FC = () => {
     reset,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver: zodResolver(signupSchema),
+    resolver: zodResolver(refinedSignupSchema),
   });
   const { mutate: signup, isLoading } = api.auth.signup.useMutation({
     onSuccess(user) {

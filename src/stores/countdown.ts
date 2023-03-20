@@ -1,6 +1,6 @@
 import { create } from "zustand";
+import type { Duration } from "~/common/durations";
 import { usePreferenceStore } from "~/stores/preference";
-import type { Duration } from "./preference";
 
 type CountdownRef = NodeJS.Timer | null;
 

@@ -1,17 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { genSalt, hash } from "bcrypt";
-import { z } from "zod";
+import { signupSchema } from "~/common/signup-schema";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const authRouter = createTRPCRouter({
   signup: publicProcedure
-    .input(
-      z.object({
-        username: z.string().min(3).max(75),
-        password: z.string().min(4).max(128),
-      })
-    )
+    .input(signupSchema.omit({ passwordConfirm: true }))
     .mutation(async ({ ctx: { prisma }, input: { username, password } }) => {
       const user = await prisma.user.findUnique({ where: { username } });
 

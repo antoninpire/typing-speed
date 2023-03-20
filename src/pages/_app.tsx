@@ -10,7 +10,7 @@ import "~/styles/globals.css";
 
 const inconsolata = Inconsolata({
   subsets: ["latin"],
-  // variable: "--font-inconsolata",
+  variable: "--font-inconsolata",
   display: "swap",
 });
 
@@ -27,7 +27,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           }
         `}
       </style>
-      <main className={`font-sans`}>
+      <main>
         <Component {...pageProps} />
         <Toaster
           toastOptions={{

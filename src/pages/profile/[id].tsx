@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import Footer from "~/components/Footer";
+import Head from "~/components/Head";
 import Header from "~/components/Header";
 import Profile from "~/components/Profile";
 import { api } from "~/utils/api";
@@ -20,16 +20,9 @@ const ProfilePage: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Typing Speed</title>
-        <meta
-          name="description"
-          content="A typing speed game to measure your WPM"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Head title="Profile" />
       <main className="flex h-screen w-screen flex-col items-center bg-background">
-        <div className="w-[48rem]">
+        <div className="h-full w-[48rem]">
           <Header
             showPreferences={false}
             title={`${
@@ -38,7 +31,7 @@ const ProfilePage: NextPage = () => {
                 : `${data?.user?.username ?? ""}'s`
             } profile`}
           />
-          <div className="no-scrollbar max-h-[80vh] overflow-x-hidden overflow-y-scroll pt-24">
+          <div className="no-scrollbar overflow-x-hidden overflow-y-scroll pt-24">
             <Profile />
           </div>
           <Footer

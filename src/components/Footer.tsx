@@ -44,9 +44,8 @@ const Footer: React.FC<FooterProps> = (props) => {
         </a>
         <div className="flex h-5 items-center gap-2">
           {links.map((link, index) => (
-            <>
+            <div key={`footer-link-${index}`}>
               <Link
-                key={`footer-link-${index}`}
                 href={link.href}
                 className="text-white hover:cursor-pointer hover:text-primary"
               >
@@ -55,7 +54,7 @@ const Footer: React.FC<FooterProps> = (props) => {
               {index !== links.length - 1 && (
                 <Separator orientation="vertical" />
               )}
-            </>
+            </div>
           ))}
         </div>
 
