@@ -6,6 +6,7 @@ import { gameTypes, type GameType } from "~/common/game-types";
 import { themes, type Theme } from "~/common/themes";
 import LoginModal from "~/components/LoginModal";
 import SignupModal from "~/components/SignupModal";
+import Logout from "~/components/icons/Logout";
 import Palette from "~/components/icons/Palette";
 import { Button } from "~/components/ui/Button";
 import Sheet from "~/components/ui/Sheet";
@@ -70,6 +71,8 @@ const Header: React.FC<HeaderProps> = (props) => {
     if (!!session?.user.id) void router.push(`/profile/${session.user.id}`);
   }, [router, session?.user.id]);
 
+  if (status === "loading") return null;
+
   return (
     <header
       className={`fixed top-0 left-0 z-10 flex w-screen items-center justify-center bg-background px-8 pt-5 ${
@@ -116,66 +119,61 @@ const Header: React.FC<HeaderProps> = (props) => {
           </div>
         )}
         <div className="flex min-w-[12rem] items-center gap-2 font-semibold text-white">
+          <Tooltip label="Change Theme">
+            <div>
+              <Sheet
+                openerButtonProps={{
+                  className: "!px-2.5",
+                  variant: "outline",
+                  children: <Palette />,
+                }}
+                title="Change Theme"
+                position="right"
+                size="xs"
+              >
+                <div className="no-scrollbar flex h-[90vh] flex-col items-center gap-4 overflow-x-hidden overflow-y-scroll px-3 py-12">
+                  {Object.entries(themes).map(([name, theme]) => (
+                    <div
+                      key={`theme-${name}`}
+                      className={`flex w-56 items-center gap-6 rounded px-3 py-2 hover:cursor-pointer hover:bg-transparent/20 ${
+                        name === currentTheme ? "bg-transparent/20" : ""
+                      }`}
+                      onClick={() => handleClickTheme(name as Theme)}
+                    >
+                      <div className="flex items-center">
+                        <div
+                          className="z-[5] h-10 w-10 rounded-full"
+                          style={{ backgroundColor: theme.primary }}
+                        />
+                        <div
+                          className="z-[4] -ml-4 h-9 w-9 rounded-full"
+                          style={{ backgroundColor: theme.background }}
+                        />
+                        <div
+                          className="z-[3] -ml-4 h-8 w-8 rounded-full"
+                          style={{ backgroundColor: theme.text }}
+                        />
+                      </div>
+                      <div className="text-xl text-text">{name}</div>
+                    </div>
+                  ))}
+                </div>
+              </Sheet>
+            </div>
+          </Tooltip>
           {status === "authenticated" ? (
             <>
               <Tooltip label="Go to your Profile">
                 <Button onClick={handleClickMyHistory}>Profile</Button>
               </Tooltip>
-              <Tooltip label="Change Theme">
-                <div>
-                  <Sheet
-                    openerButtonProps={{
-                      className: "!px-2.5",
-                      variant: "outline",
-                      children: <Palette />,
-                    }}
-                    title="Change Theme"
-                    position="right"
-                    size="xs"
-                  >
-                    <div className="no-scrollbar flex flex-col items-center gap-4 overflow-x-hidden overflow-y-scroll px-3 py-12">
-                      {Object.entries(themes).map(([name, theme]) => (
-                        <div
-                          key={`theme-${name}`}
-                          className={`flex w-52 items-center gap-6 rounded px-3 py-2 hover:cursor-pointer ${
-                            name === currentTheme
-                              ? "bg-transparent/20"
-                              : "hover:bg-transparent/10"
-                          }`}
-                          onClick={() => handleClickTheme(name as Theme)}
-                        >
-                          <div
-                            className="h-10 w-10 rounded-full"
-                            style={{ backgroundColor: theme.primary }}
-                          />
-                          <div className="text-xl text-text">{name}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </Sheet>
-                </div>
-              </Tooltip>
+
               <Tooltip label="Logout">
                 <Button
                   variant="destructive"
                   onClick={handleClickLogout}
                   className="!px-2.5"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                  </svg>
+                  <Logout />
                 </Button>
               </Tooltip>
             </>

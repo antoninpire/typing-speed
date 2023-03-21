@@ -62,7 +62,11 @@ const SignupModal: React.FC = () => {
   return (
     <Modal
       onClose={handleClose}
-      openerButtonProps={{ children: "signup", variant: "link" }}
+      openerButtonProps={{
+        children: "signup",
+        variant: "ghost",
+        className: "-ml-1",
+      }}
     >
       <form
         onSubmit={handleSubmit(handleSignup)}

@@ -70,7 +70,7 @@ const Table: React.FC = () => {
                   {tests.map((test, index) => (
                     <tr
                       key={test.id}
-                      className="border-b border-gray-700 text-gray-300"
+                      className="border-b border-gray-700 text-white/90"
                     >
                       <td className="whitespace-nowrap px-6 py-4 font-medium">
                         {index + 1}

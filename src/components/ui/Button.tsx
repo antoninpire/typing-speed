@@ -4,17 +4,17 @@ import * as React from "react";
 import cn from "classnames";
 
 const buttonVariants = cva(
-  "active:scale-95 inline-flex items-center justify-center rounded-md text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none focus:ring-offset-slate-900 data-[state=open]:bg-slate-800 font-semibold",
+  "active:scale-95 inline-flex items-center justify-center rounded-md text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none focus:ring-offset-slate-900 data-[state=open]:bg-text font-semibold",
   {
     variants: {
       variant: {
         default: "hover:bg-text/90 bg-text text-slate-900",
         destructive: "bg-red-500 text-white hover:bg-red-600",
         outline:
-          "bg-transparent border hover:bg-transparent/10 border-slate-700 text-slate-100",
-        subtle: "hover:bg-slate-600 bg-slate-700 text-slate-100",
+          "bg-transparent border hover:bg-transparent/10 border-white/30 text-slate-100",
+        subtle: "hover:bg-white/20 bg-white/30 text-slate-100",
         ghost:
-          "bg-transparent hover:bg-slate-800 text-slate-100 hover:text-slate-100 data-[state=open]:bg-transparent data-[state=open]:bg-transparent",
+          "bg-transparent hover:bg-transparent/10 text-text hover:text-text data-[state=open]:bg-transparent data-[state=open]:bg-transparent",
         link: "bg-transparent underline-offset-4 hover:underline text-slate-100 hover:bg-transparent",
       },
       size: {

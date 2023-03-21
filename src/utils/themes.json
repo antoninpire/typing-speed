@@ -34,5 +34,47 @@
     "white": "#FF79CD",
     "primary": "#FFDF6B",
     "text": "#FF79CD"
+  },
+  "dracula": {
+    "background": "#272A36",
+    "primary": "#FE79C6",
+    "text": "#F8F8F2",
+    "white": "#F8F8F2"
+  },
+  "night": {
+    "background": "#0E172A",
+    "primary": "#37BCF7",
+    "text": "#B3C5EE",
+    "white": "#B3C5EE"
+  },
+  "coffee": {
+    "background": "#20161F",
+    "primary": "#DA924B",
+    "text": "#756E63",
+    "white": "#756E63"
+  },
+  "valentine": {
+    "background": "#F0D6E8",
+    "primary": "#E86D7B",
+    "text": "#632C3B",
+    "white": "#632C3B"
+  },
+  "cyberpunk": {
+    "background": "#FFEE03",
+    "primary": "#FF7597",
+    "text": "#323000",
+    "white": "#323000"
+  },
+  "aqua": {
+    "background": "#345DA7",
+    "primary": "#00ECF3",
+    "text": "#C5D9FF",
+    "white": "#C5D9FF"
+  },
+  "lemonade": {
+    "background": "#E6E5E5",
+    "primary": "#519903",
+    "text": "#333333",
+    "white": "#333333"
   }
 }
